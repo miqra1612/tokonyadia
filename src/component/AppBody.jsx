@@ -26,25 +26,29 @@ export default function AppBody({ itemValue, onUpdatePrice, itemCart, onUpdateSh
 
     function smallBody(){
        
-        return(         
-            <button type="button" className="btn btn-primary" onClick={toggleMenu}> <FontAwesomeIcon icon={faFilter}/></button>
+        return(  
+            <>
+            <button type="button" className="btn btn-primary " onClick={toggleMenu}> <FontAwesomeIcon icon={faFilter}/></button>
+            
+            
+            </>       
                          
         );
     }
 
     return(
         <div style={promoStyle}>
-            <div className ="container">
-                <br/> 
-                <div className="row">
+            <div className ="">
+                <br />
+                <div className="row ">
                     
-                    <div className="col-2">
+                    <div className={isSmallScreen? "col-1 mx-2": "col-2 mx-5"}>
                         {
                             !isSmallScreen ? wideBody(): smallBody()
                         }
                        
                     </div>
-                    <div className="col">
+                    <div className="col-3 flex-grow-1 ms-1 me-2">
                         {
                             !showMenu ? <ItemList itemValue = {itemValue} itemCart = {itemCart} onUpdateShopCart = {onUpdateShopCart} searchValue ={searchValue}/>
                                         :<LeftBody onUpdatePrice = {onUpdatePrice}/>
