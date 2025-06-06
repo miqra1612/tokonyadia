@@ -53,7 +53,7 @@ export default function AppHead({setPage, onSetSearch}){
                             <button className="btn btn-outline-secondary ms-2" type="button" id="searchBtn" onClick={searchItem}>Search</button>
                             <button className="btn btn-outline-success ms-2" type="button" id="cardBtn" onClick={()=> setPage("cart")}>
                             
-                            <img src="/icon/trolley.png" width="30" height="30" alt="" />
+                            <img src="./icon/trolley.png" width="30" height="30" alt="" />
                                 Cart
                             </button>
                         </form>
