@@ -39,23 +39,23 @@ function AppFooter(){
                       <h5>Follow Us</h5><br/>
                       
                       <a className="linkFooter text-dark mx-2" href="https://www.facebook.com/">
-                        <img src="./icon/facebook.png" alt="" width="30" height="30" />
+                        <img src={`${process.env.PUBLIC_URL}/icon/facebook.png`} alt="" width="30" height="30" />
                       </a>
                       
                       <a className="linkFooter text-dark mx-2" href="https://www.instagram.com/">
-                        <img src="./icon/instagram.png" alt="" width="30" height="30" />
+                        <img src={`${process.env.PUBLIC_URL}/icon/instagram.png`} alt="" width="30" height="30" />
                       </a>
                       
                       <a className="linkFooter text-dark mx-2" href="https://x.com/i/flow/login">
-                        <img src="./icon/twitter.png" alt="" width="30" height="30" />
+                        <img src={`${process.env.PUBLIC_URL}/icon/twitter.png`} alt="" width="30" height="30" />
                       </a>
                       
                       <a className="linkFooter text-dark mx-2" href="https://www.youtube.com/">
-                        <img src="./icon/youtube.png" alt="" width="30" height="30" />
+                        <img src={`${process.env.PUBLIC_URL}/icon/youtube.png`} alt="" width="30" height="30" />
                       </a>
 
                       <a className="linkFooter text-dark mx-2" href="https://www.tiktok.com/en/">
-                        <img src="./icon/tik-tok.png" alt="" width="30" height="30" />
+                        <img src={`${process.env.PUBLIC_URL}/icon/tik-tok.png`} alt="" width="30" height="30" />
                       </a>
 
                     </div>
