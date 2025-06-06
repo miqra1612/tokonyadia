@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import WindowScaler from "./WindowScaler";
 
 export default function AppHead({setPage, onSetSearch}){
     let headStyle = {background: "white"}
@@ -17,20 +17,8 @@ export default function AppHead({setPage, onSetSearch}){
     }
 
     //Region Show Logo
-    const [showLogo, setShowLogo] = useState(window.innerWidth);
-
-    useEffect(()=>{
-        const handleResize = () =>{
-            setShowLogo(window.innerWidth);
-        
-        };
-
-        window.addEventListener("resize", handleResize);
-
-        return () =>{
-            window.removeEventListener("resize", handleResize);
-        }
-    }, []);
+    const screenWidth = WindowScaler();
+    const isMobile = screenWidth < 1200;
     
     //End Region
 
@@ -42,7 +30,7 @@ export default function AppHead({setPage, onSetSearch}){
                     <div className="col-2">
                        
                     {  
-                        showLogo>1200? <img src="./icon/logo2.png" style={{width:"170px", height:"45px", borderRadius:"12px"}}/>:null
+                        isMobile === false? <img src={`${process.env.PUBLIC_URL}/icon/logo2.png`} style={{width:"170px", height:"45px", borderRadius:"12px"}}/>:null
                     }
 
                     </div>
@@ -53,7 +41,7 @@ export default function AppHead({setPage, onSetSearch}){
                             <button className="btn btn-outline-secondary ms-2" type="button" id="searchBtn" onClick={searchItem}>Search</button>
                             <button className="btn btn-outline-success ms-2" type="button" id="cardBtn" onClick={()=> setPage("cart")}>
                             
-                            <img src="./icon/trolley.png" width="30" height="30" alt="" />
+                            <img src={`${process.env.PUBLIC_URL}/icon/trolley.png`} width="30" height="30" alt="" />
                                 Cart
                             </button>
                         </form>
