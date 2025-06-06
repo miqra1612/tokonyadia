@@ -36,3 +36,24 @@
     transform: rotate(360deg);
   }
 }
+
+.shopLogo{
+  color: #f0932b;
+  align-self: center;
+  margin-bottom: 10px;
+  border-style: solid;
+  border-radius: 10px;
+}
+
+.bigSearch{
+  width: 100px;
+}
+
+.linkFooter{
+  text-decoration: none;
+}
+
+.contact{
+  color: aqua;
+  text-decoration: none;
+}
