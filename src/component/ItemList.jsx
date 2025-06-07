@@ -54,6 +54,7 @@ function ItemList ({itemValue, itemCart, onUpdateShopCart, searchValue}) {
     return (
     <div>
         <div className="container-fluid "> {sortList()}
+            <br/>
                 <div className="row row-cols-auto">
                     {itemlist.map((p)=>( 
                         <div className="col" key={"col" + p.id}>
