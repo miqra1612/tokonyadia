@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 
 
-export default function AppNavbar({onSetValue, setPage, onToggleLogo}){
+export default function AppNavbar({onSetValue, setPage}){
     let btnStyle = {  };
 
+    const [showMenu,setShowMenu] = useState(true);
+    const toggleMenu = ()=>{
+        setShowMenu(!showMenu);
+    }
 
 
     return(
@@ -12,14 +16,18 @@ export default function AppNavbar({onSetValue, setPage, onToggleLogo}){
             <nav className="navbar navbar-expand-lg navbar-light" style={{background:"#f6e58d"}}>
                 <div className="container-fluid">
                      
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" onToggle={(e) => { alert(e.isExpanded); onToggleLogo(e.isExpanded);}}>
+                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" onClick={toggleMenu}>
                     <span className="navbar-toggler-icon"></span>
                     </button>
-
-                    <form className="d-flex position-absolute end-0">
+                    {
+                        showMenu ? 
+                            <form className="d-flex position-absolute end-0">
                             <button className="btn btn-outline-dark me-2" type="button" onClick={()=> setPage("login")}>Log in</button>
                             <button className="btn btn-outline-primary me-2" type="button" onClick={()=> setPage("register")}>Register</button>
-                    </form>
+                            </form> : null
+
+                    }
+                    
 
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav">
