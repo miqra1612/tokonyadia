@@ -30,7 +30,8 @@ export default function AppHead({setPage, onSetSearch}){
                     <div className="col-2">
                        
                     {  
-                        isMobile === false? <img src={`${process.env.PUBLIC_URL}/icon/logo2.png`} style={{width:"170px", height:"45px", borderRadius:"12px"}}/>:null
+                        isMobile === false? <img src={`${process.env.PUBLIC_URL}/icon/logo2.png`} style={{width:"170px", height:"43px", borderRadius:"12px"}}/>:
+                        <img className="align-self-center" src={`${process.env.PUBLIC_URL}/logo512.png`} style={{ width:"50px", height:"50px",borderRadius:"12px"}}/>
                     }
 
                     </div>
