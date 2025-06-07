@@ -28,8 +28,7 @@ export default function AppBody({ itemValue, onUpdatePrice, itemCart, onUpdateSh
        
         return(  
             <>
-            <button type="button" className="btn btn-primary " onClick={toggleMenu}> <FontAwesomeIcon icon={faFilter}/></button>
-            
+            <button type="button" className="btn btn-outline-light" onClick={toggleMenu} style={{ height:"30px", background:"#7ed6df"}}> <FontAwesomeIcon icon={faFilter}/></button>
             
             </>       
                          
@@ -38,18 +37,19 @@ export default function AppBody({ itemValue, onUpdatePrice, itemCart, onUpdateSh
 
     return(
         <div style={promoStyle}>
-            <div className ="">
-                <br />
+            <div className ="container-fluid">
+               
                 <div className="row ">
                     
-                    <div className={isSmallScreen? "col-1 mx-2": "col-2 mx-5"}>
+                    {
+                        isSmallScreen ? smallBody() :<div className={isSmallScreen? "col-1 ms-2": "col-2 mx-auto my-4"}> { wideBody() } </div>
+                    
+                    }
+
+                    <div className="col-4 flex-grow-1 me-2">
+                        
                         {
-                            !isSmallScreen ? wideBody(): smallBody()
-                        }
-                       
-                    </div>
-                    <div className="col-3 flex-grow-1 ms-1 me-2">
-                        {
+                           
                             !showMenu ? <ItemList itemValue = {itemValue} itemCart = {itemCart} onUpdateShopCart = {onUpdateShopCart} searchValue ={searchValue}/>
                                         :<LeftBody onUpdatePrice = {onUpdatePrice}/>
                         }
