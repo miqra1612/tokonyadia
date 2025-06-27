@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faUser, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { auth, db } from '../../firebase/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { setDoc, doc } from 'firebase/firestore';
 
 function  Register ({account, onRegisterAccount, onSetPage}){
     const inputStyle = {
@@ -24,7 +27,8 @@ function  Register ({account, onRegisterAccount, onSetPage}){
         province:"",
         country:"",
         postalCode:0,
-        completeAddress:""
+        completeAddress:"",
+        accountType:"buyer"
 
     });
 
@@ -49,7 +53,7 @@ function  Register ({account, onRegisterAccount, onSetPage}){
     }
 
      const setPhone = (e)=>{
-        setAccountInfo(prev => ({...prev,phoneNumber:e.target.value}));
+        setAccountInfo(prev => ({...prev,phoneNumber: e.target.value}));
     }
 
      const setAddress = (e)=>{
@@ -72,26 +76,30 @@ function  Register ({account, onRegisterAccount, onSetPage}){
         setAccountInfo(prev => ({...prev,postalCode:e.target.value}));
     }
 
+    const setAccountType = (e)=>{
+        setAccountInfo(prev => ({...prev,accountType:e.target.value}));
+    }
+
     const [confirmPassword, setConfirm] = useState(""); 
 
-    function AddNewAccount(){
+    // function AddNewAccount(){
+    //     //This Funtion is for testing only and will be replace with ReaclAccount
+
+    //     accountInfo.buyersName = accountInfo.firstName + " " + accountInfo.lastName;
+    //     accountInfo.completeAddress = accountInfo.address + ", " + accountInfo.city + ", " + accountInfo.province + ", " + accountInfo.country + ", " + accountInfo.postalCode;
+
+    //     onRegisterAccount(accountInfo);
+    //     //alert("email: " + account[0].email + ", " + "username: " + account[0].username);
+
+    //     if(accountInfo.password === confirmPassword){
+    //         alert("Success Register \n" + "Name: " + accountInfo.buyersName + "\n" + "Username: " + accountInfo.username + "\n" + "Address: " + accountInfo.completeAddress);
+    //         onSetPage("login");
+    //     }
+    //     else{
+    //         alert("Password and confirm password not match, check again");
+    //     }
         
-
-        accountInfo.buyersName = accountInfo.firstName + " " + accountInfo.lastName;
-        accountInfo.completeAddress = accountInfo.address + ", " + accountInfo.city + ", " + accountInfo.province + ", " + accountInfo.country + ", " + accountInfo.postalCode;
-
-        onRegisterAccount(accountInfo);
-        //alert("email: " + account[0].email + ", " + "username: " + account[0].username);
-
-        if(accountInfo.password === confirmPassword){
-            alert("Success Register \n" + "Name: " + accountInfo.buyersName + "\n" + "Username: " + accountInfo.username + "\n" + "Address: " + accountInfo.completeAddress);
-            onSetPage("login");
-        }
-        else{
-            alert("Password and confirm password not match, check again");
-        }
-        
-    }
+    // }
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -102,6 +110,42 @@ function  Register ({account, onRegisterAccount, onSetPage}){
 
     const toggleConfirm = () => {
         setShowConfirm(!showConfirm);
+    }
+
+    const createRealAccount = async (e) => {
+        
+        e.preventDefault();
+
+        accountInfo.buyersName = accountInfo.firstName + " " + accountInfo.lastName;
+        accountInfo.completeAddress = accountInfo.address + ", " + accountInfo.city + ", " + accountInfo.province + ", " + accountInfo.country + ", " + accountInfo.postalCode;
+
+        
+        if(accountInfo.password === confirmPassword){
+
+            try {
+                const userCred = await createUserWithEmailAndPassword(auth, accountInfo.email, accountInfo.password );
+                await setDoc(doc(db, "users", userCred.user.uid),{
+                    name: accountInfo.buyersName,
+                    email: accountInfo.email,
+                    address: accountInfo.completeAddress,
+                    phoneNumber: accountInfo.phoneNumber,
+                    role: accountInfo.accountType,
+                    uid: userCred.user.uid
+
+                });
+                alert("Success Register \n" + "Name: " + accountInfo.buyersName + "\n" + "Username: " + accountInfo.username + "\n" + "Address: " + accountInfo.completeAddress);
+                onSetPage("login");
+
+            } catch (error) {
+                alert(error.message);
+            }
+            
+        }
+        else{
+            alert("Password and confirm password not match, check again");
+        }
+
+        
     }
 
   return (
@@ -194,7 +238,17 @@ function  Register ({account, onRegisterAccount, onSetPage}){
             <br />
 
             <div className="input-group mb-3">
-                <button className="btn btn-outline-secondary" type="button" id="registerBtn" onClick={AddNewAccount}>Register New Account</button>
+                <span className="input-group-text" style={inputStyle}>Account Type</span>
+                <select name="role" aria-label="Account type" className="form-control" onChange={setAccountType}>
+                    <option value="buyer">Buyer</option>
+                    <option value="seller">Seller</option>    
+                </select>
+                            
+            </div>
+            <br />
+
+            <div className="input-group mb-3">
+                <button className="btn btn-outline-secondary" type="button" id="registerBtn" onClick={createRealAccount}>Register New Account</button>
                 
             </div>
 

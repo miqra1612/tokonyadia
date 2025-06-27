@@ -36,19 +36,20 @@ function ItemList ({itemValue, itemCart, onUpdateShopCart, searchValue}) {
    
     const AddItem= (item)=>{
         const shopItem = {
-            itemName: item.name,
-            itemCount:1,
-            itemPrice:parseFloat(item.price),
-            itemId:item.id,
+            discount:"",
+            price:parseFloat(item.price),
+            productId:item.id,
+            productName: item.name,
+            productType:item.tipe,
             promoType:"",
-            itemType:item.tipe,
+            quantity:1,
             image:item.image,
         };
 
         onUpdateShopCart(shopItem);
        
         //alert( itemCart.map((i)=>(i.itemName)+ "\n") );
-          alert("add 1 item: " + shopItem.itemName)  
+          alert("add 1 item: " + shopItem.productName)  
     }
 
     return (

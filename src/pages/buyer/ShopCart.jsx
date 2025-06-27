@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import WindowScaler from './WindowScaler';
+import WindowScaler from '../../component/WindowScaler';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,7 +10,7 @@ function ShopCart ({cart, onSetPage}){
     let btnMobileStyle = {width:"30px", height:"30px"}
     let imageMobileStyle = {width: "6rem", height: "6rem",  borderRadius:"14px"}
     
-    const totalPrice = cart.reduce((sum, item) => sum + item.itemCount * item.itemPrice * 1000,0);
+    const totalPrice = cart.reduce((sum, item) => sum + item.itemCount * item.price * 1000,0);
 
     const serviceCharge = 4000;
 
@@ -35,8 +35,8 @@ function ShopCart ({cart, onSetPage}){
                             <img className="" src={item.image} alt="..."  style={imageMobileStyle}/>
                         </div>
                         <div className="col text-start mx-auto my-auto">
-                            <h6 className="mt-2" style={{width:"9rem"}}>{item.itemName} x {item.itemCount}</h6>
-                            <h6 >Rp { (1000 * item.itemPrice * item.itemCount).toLocaleString()}</h6>
+                            <h6 className="mt-2" style={{width:"9rem"}}>{item.productName} x {item.quantity}</h6>
+                            <h6 >Rp { (1000 * item.price * item.quantity).toLocaleString()}</h6>
                             <br />
                            
                             <button type="button" className="btn btn-primary btn-sm mb-2" style={btnMobileStyle}> - </button>
@@ -65,12 +65,12 @@ function ShopCart ({cart, onSetPage}){
                             <img className="" src={item.image} alt="..."  style={imageStyle}/>
                         </div>
                         <div className="col justify-content-end mx-4 my-auto">
-                            <h6>{item.itemName} x {item.itemCount}</h6>
+                            <h6>{item.productName} x {item.quantity}</h6>
                             
                             
                         </div>
                         <div className="col my-auto justify-content-end">
-                            <h6 >Rp { (1000 * item.itemPrice * item.itemCount).toLocaleString()}</h6>
+                            <h6 >Rp { (1000 * item.price * item.quantity).toLocaleString()}</h6>
                         </div>
                         <div className="col my-auto">
                                 <button type="button" className="btn btn-primary btn-sm mx-2" style={btnStyle}> - </button>

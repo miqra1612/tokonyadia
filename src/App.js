@@ -1,15 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
 import AppNavbar from './component/AppNavbar';
-import Promo from './component/Promo';
-import AppBody from './component/AppBody';
-import AppHead from './component/AppHead';
+import Promo from './pages/buyer/Promo';
+import AppBody from './pages/buyer/AppBody';
+import AppHead from './pages/buyer/AppHead';
 import AppFooter from './component/AppFooter';
 import { useEffect, useState } from 'react';
-import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
-import Register from './component/Register';
-import Login from './component/Login';
-import ShopCart from './component/ShopCart';
+import Register from './pages/buyer/Register';
+import Login from './pages/buyer/Login';
+import ShopCart from './pages/buyer/ShopCart';
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from './firebase/firebaseConfig';
 
 function App() {
   
@@ -45,8 +46,27 @@ function App() {
   
   const updateShopCart = (item)=>{
     
-      setCart(prevCart => [...prevCart, item ]);
-  }; 
+      setCart(prevCart => {
+        const existingItem = prevCart.find((oldItem) => oldItem.productName === item.productName);
+
+        if(existingItem){
+          const updatedCart = [...prevCart];
+          updatedCart[existingItem].quantity += item.quantity;
+          return updatedCart;
+        }
+        else{
+          return [...prevCart, item ];
+        }
+        
+      });
+
+      const savedCart = localStorage.getItem("cart");
+      return savedCart ? JSON.parse(savedCart):[];
+  } 
+
+   useEffect(() => {
+        localStorage.setItem("cart", JSON.stringify(itemCart));
+   }, [itemCart]);
 
   //End Region
 
@@ -88,13 +108,29 @@ function App() {
   //End Region
 
  
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+      const unsubscribeUser = onAuthStateChanged(auth, (currentUser) => {
+        if(currentUser){
+          //alert("Wellcome Back " + currentUser.email);
+          setUser(currentUser);
+        }
+        else{
+          setUser(null);
+        }
+      });
+
+      return () => unsubscribeUser();
+    }, []);
+ 
  
 
   return (
     <div className="App">
       <div className="fixed-top">
-        <AppNavbar onSetValue = {updateItemType} setPage={setPage}/>
-        <AppHead setPage = {setPage} onSetSearch={updateSeach}/>
+        <AppNavbar onSetValue = {updateItemType} setPage={setPage} user = {user}/>
+        <AppHead setPage = {setPage} onSetSearch={updateSeach} user = {user}/>
 
       </div>
       <Promo/>

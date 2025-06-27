@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import LeftBody from './LeftBody';
 import ShopItem from './ShopItem';
 import ItemList from './ItemList';
-import Tester from './Tester';
-import WindowScaler from './WindowScaler';
+import Tester from '../../component/Tester';
+import WindowScaler from '../../component/WindowScaler';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter';
 
