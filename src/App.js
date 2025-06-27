@@ -45,13 +45,14 @@ function App() {
   const [itemCart,setCart] = useState([]);
   
   const updateShopCart = (item)=>{
-    
+
       setCart(prevCart => {
         const existingItem = prevCart.find((oldItem) => oldItem.productName === item.productName);
 
         if(existingItem){
-          const updatedCart = [...prevCart];
-          updatedCart[existingItem].quantity += item.quantity;
+          const updatedCart = prevCart.map((oldItem) => oldItem.productName === item.productName ?
+                              {...oldItem, quantity: oldItem.quantity + item.quantity}: oldItem);
+                              
           return updatedCart;
         }
         else{
