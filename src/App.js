@@ -11,6 +11,7 @@ import Login from './pages/buyer/Login';
 import ShopCart from './pages/buyer/ShopCart';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from './firebase/firebaseConfig';
+import UploadCart from './firebase/UploadCart';
 
 function App() {
   
@@ -68,6 +69,14 @@ function App() {
    useEffect(() => {
         localStorage.setItem("cart", JSON.stringify(itemCart));
    }, [itemCart]);
+
+   useEffect(() => {
+        const handleUnload = () => {
+          UploadCart(itemCart);
+        };
+        window.addEventListener("beforeunload", handleUnload);
+        return () => window.removeEventListener("beforeunload", handleUnload);
+  }, [itemCart]);
 
   //End Region
 

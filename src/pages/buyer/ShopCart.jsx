@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import WindowScaler from '../../component/WindowScaler';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import UploadCart from '../../firebase/UploadCart';
 
 function ShopCart ({cart, onSetPage}){
     let imageStyle = {width: "6rem", height: "6rem",  borderRadius:"14px"}
@@ -10,7 +11,7 @@ function ShopCart ({cart, onSetPage}){
     let btnMobileStyle = {width:"30px", height:"30px"}
     let imageMobileStyle = {width: "6rem", height: "6rem",  borderRadius:"14px"}
     
-    const totalPrice = cart.reduce((sum, item) => sum + item.itemCount * item.price * 1000,0);
+    const totalPrice = cart.reduce((sum, item) => sum + item.quantity * item.price * 1000,0);
 
     const serviceCharge = 4000;
 
@@ -150,7 +151,9 @@ function ShopCart ({cart, onSetPage}){
                 ))}
                 
                 {isMobile? mobileCount() : wideCount()}
-                 
+                
+                {UploadCart(cart)}
+
             </div>
            
     </>
