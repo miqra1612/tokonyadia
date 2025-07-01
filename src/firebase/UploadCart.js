@@ -10,7 +10,7 @@ async function UploadCart(cart){
     }
 
     const cleanItem = cart.map((p) => ({
-            discount: p.discount,
+            discount: p.discount,   
             price: p.price * 1000,
             productId: p.productId,
             productName: p.productName,
