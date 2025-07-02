@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import WindowScaler from '../../component/WindowScaler';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faL, faTrash } from '@fortawesome/free-solid-svg-icons';
 import UploadCart from '../../firebase/UploadCart';
+import { items } from '../seller/ItemsData';
 
 function ShopCart ({cart, onSetPage}){
     let imageStyle = {width: "6rem", height: "6rem",  borderRadius:"14px"}
@@ -137,7 +138,12 @@ function ShopCart ({cart, onSetPage}){
         );
     }
 
+    const [canUpload, setCanUpload] = useState(true);
 
+    function pushUpload(){
+         UploadCart(cart);
+             setCanUpload(false);
+    }
    
   return (
     <>
@@ -146,13 +152,11 @@ function ShopCart ({cart, onSetPage}){
                 {cart.map((item)=>(
                    
                     isMobile? mobileUI(item) : wideUI(item)
-                    
-                
                 ))}
                 
                 {isMobile? mobileCount() : wideCount()}
                 
-                {UploadCart(cart)}
+                {canUpload ? pushUpload() : null}
 
             </div>
            

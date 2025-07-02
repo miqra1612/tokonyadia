@@ -10,8 +10,11 @@ import Register from './pages/buyer/Register';
 import Login from './pages/buyer/Login';
 import ShopCart from './pages/buyer/ShopCart';
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from './firebase/firebaseConfig';
+import { auth, db } from './firebase/firebaseConfig';
 import UploadCart from './firebase/UploadCart';
+import { doc,getDoc } from 'firebase/firestore';
+import { items } from './pages/seller/ItemsData';
+
 
 function App() {
   
@@ -121,10 +124,29 @@ function App() {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-      const unsubscribeUser = onAuthStateChanged(auth, (currentUser) => {
+      const unsubscribeUser = onAuthStateChanged(auth, async (currentUser) => {
         if(currentUser){
           //alert("Wellcome Back " + currentUser.email);
           setUser(currentUser);
+
+          const cartdData = doc(db, "carts", currentUser.uid);
+          const cartSnapshot = await getDoc(cartdData);
+
+          if(cartSnapshot.exists()){
+            const snapData = cartSnapshot.data();
+            const snapItems = snapData.items ||[]
+
+            snapItems.map( item => {
+              const getItem = items.find( (p) => p.id ===  item.productId);
+              getItem ? item.image = getItem.image : item.image = null;
+              
+            });
+
+            setCart(snapItems);
+           
+          }
+
+           
         }
         else{
           setUser(null);
