@@ -63,7 +63,7 @@ async function UploadCart(cart){
             timestamp: serverTimestamp(),
         });
 
-        alert("success upload cart");
+        console.log("success upload cart");
     
 
     } catch (error) {

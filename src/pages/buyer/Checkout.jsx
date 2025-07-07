@@ -1,12 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import WindowScaler from '../../component/WindowScaler';
 
-function Checkout({user, cart}){
+
+function Checkout({user, cart, onSetPage, onSetPaymentInfo}){
     
     const paymentStyle = { border:"2px solid orange", borderRadius:"5px" };
     const paymentLogoStyle = { height:"32px", width:"64px" };
     const boxItem = {background:"#c7ecee", borderRadius:"14px"}
     const imageStyle = {width: "6rem", height: "6rem",  borderRadius:"14px"}
+    const imageMobileStyle = {width: "6rem", height: "6rem",  borderRadius:"14px"}
+
+    const [bank, setBank] = useState("");
+    const selectBank = (e)=>{
+        console.log(e.target.value);
+        setBank(e.target.value); 
+    }
 
     const totalPrice = cart.reduce((sum, item) => sum + item.quantity * item.price,0);
 
@@ -15,6 +24,65 @@ function Checkout({user, cart}){
     const tax = ( totalPrice * 10 )/ 100;
 
     const totalPayment = totalPrice + serviceCharge + tax;
+
+    function generatePaymentInfo(){
+
+        const timeLimit = new Date();
+        timeLimit.setHours(timeLimit.getHours() + 2);
+        const options = {
+            day:'2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',   // Formats hour as two digits (e.g., 07, 19)
+            minute: '2-digit', // Formats minute as two digits (e.g., 05, 56)
+            second: '2-digit', // Formats second as two digits (e.g., 00, 05)
+            hour12: false,     // Ensures 24-hour format
+            timeZone: 'Asia/Jakarta' // Specifies the time zone
+        };
+
+
+        const min = 1000000000;
+        const max = 9999999999;
+
+        let paymentInfo = {
+            bankName:bank,
+            transferAccount:(Math.floor(Math.random() * (max-min+1)) + min).toString(),
+            totalPayment:totalPayment,
+            EndPaymentTime: timeLimit.toLocaleString('en-US', options)
+        }
+
+        console.log ("payment info: " + paymentInfo.bankName + ", " + paymentInfo.transferAccount + ", pay before: " + paymentInfo.EndPaymentTime);
+        onSetPaymentInfo(paymentInfo);
+
+    }
+    
+
+    function payItems (){
+        
+
+        alert("Payment Success \nPaid: Rp" + totalPayment.toLocaleString());
+        onSetPage("home");
+    }
+
+    const screenWidth = WindowScaler();
+    const isMobile = screenWidth < 1000;
+
+    const mobileUI= (item)=>(
+    
+                       <div className="row row-cols-auto my-4" style={boxItem} key={"sh"+ item.productId}>
+                            <div className="col my-auto">
+                                <img className="" src={item.image} alt="..."  style={imageMobileStyle}/>
+                            </div>
+                            <div className="col text-start mx-auto my-auto">
+                                <h6 className="mt-2" style={{width:"9rem"}}>{item.productName} x {item.quantity}</h6>
+                                <h6 >Rp { ( item.price * item.quantity).toLocaleString()}</h6>
+                                <br />
+                               
+                            </div>
+                           
+                            <br/> 
+                        </div>
+    );
     
     const wideUI = (item)=>(
                 
@@ -34,11 +102,11 @@ function Checkout({user, cart}){
                             <br/> 
                         </div> 
                 
-            );
+    );
 
   return (
     <div className="container text-start my-5">
-        <h6>User : {user.name}</h6>
+        <h6>Buyer : {user.name}</h6>
         <br />
         
         <h6>Address</h6>
@@ -48,7 +116,7 @@ function Checkout({user, cart}){
         <div>
         <h6>Items</h6>
             {cart.map((item)=> (
-                wideUI(item)
+                isMobile? mobileUI(item): wideUI(item)
                 ))
             }
         </div>
@@ -63,7 +131,7 @@ function Checkout({user, cart}){
         <h6>Select Payment</h6>
         <div>
             <div className="form-check my-3 py-3" style={paymentStyle}>
-                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="mandiri"/>
+                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="mandiri" value={"mandiri"} checked={bank==="mandiri"} onChange={selectBank}/>
                 <label className="form-check-label mx-1" htmlFor="mandiri">
                     Mandiri
                 </label>
@@ -71,7 +139,7 @@ function Checkout({user, cart}){
             </div>
 
             <div className="form-check my-3 py-3" style={paymentStyle}>
-                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="bri"/>
+                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="bri" value={"bri"} checked={bank==="bri"} onChange={selectBank }/>
                 <label className="form-check-label mx-1" htmlFor="bri">
                    BRI
                 </label>
@@ -80,7 +148,7 @@ function Checkout({user, cart}){
             </div>
 
             <div className="form-check my-3 py-3" style={paymentStyle}>
-                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="bni"/>
+                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="bni" value={"bni"} checked={bank==="bni"}  onChange={selectBank }/>
                 <label className="form-check-label mx-1" htmlFor="bni">
                     BNI
                 </label>
@@ -89,7 +157,7 @@ function Checkout({user, cart}){
             </div>
 
             <div className="form-check my-3 py-3" style={paymentStyle}>
-                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="bca"/>
+                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="bca" value={"bca"} checked={bank==="bca"}  onChange={selectBank }/>
                 <label className="form-check-label mx-1" htmlFor="bca">
                     BCA
                 </label>
@@ -98,7 +166,7 @@ function Checkout({user, cart}){
             </div>
 
             <div className="form-check my-3 py-3" style={paymentStyle}>
-                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="bsi"/>
+                <input className="form-check-input mx-1" type="radio" name="flexRadioDefault" id="bsi"  value={"bsi"} checked={bank==="bsi"}  onChange={selectBank }/>
                 <label className="form-check-label mx-1" htmlFor="bsi">
                     BSI
                 </label>
@@ -111,8 +179,8 @@ function Checkout({user, cart}){
         <h5>Total price to pay: Rp {totalPayment.toLocaleString()}</h5>
         <br />
 
-        <div className="col-4 ">
-            <button type="button" className="btn btn-primary btn-md" > Process Payment </button>
+        <div className="col ">
+            <button type="button" className="btn btn-primary btn-md" onClick={()=> {generatePaymentInfo(bank); onSetPage("paymentInfo");} }> Process Payment </button>
         </div>
     </div>
   );

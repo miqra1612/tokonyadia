@@ -16,6 +16,7 @@ import { doc,getDoc } from 'firebase/firestore';
 import { items } from './pages/seller/ItemsData';
 import LoadingBar from './component/LoadingBar';
 import Checkout from './pages/buyer/Checkout';
+import PaymentInfo from './pages/buyer/PaymentInfo';
 
 
 function App() {
@@ -113,7 +114,10 @@ function App() {
         return <Login account = {account} onSetPage={setPage} onSetLoading = {setIsloading} onLoadingMsg = {setLoadingMsg}/>;
       case "home":
         return <AppBody itemValue = {itemValue} onUpdatePrice = {updateMinMaxPrice} itemCart = {itemCart} onUpdateShopCart = {updateShopCart} searchValue = {searcItem}/>;
-          
+      case "checkout":
+        return <Checkout user = {currentAccount} cart = {itemCart} onSetPage={setPage} onSetPaymentInfo ={setPaymentInfo}/>
+      case "paymentInfo":
+        return <PaymentInfo paymentInfo={paymentInfo} setPage = {setPage}/>
       default:
         return  <AppBody  itemValue = {itemValue} onUpdatePrice = {updateMinMaxPrice} itemCart = {itemCart} onUpdateShopCart = {updateShopCart} searchValue = {searcItem}/>;
           
@@ -125,6 +129,7 @@ function App() {
     const [loadingMsg, setLoadingMsg] = useState("Please Wait...");
     const [startFetching, setStartFetching] = useState(true);
     const [user, setUser] = useState(null);
+
     const [currentAccount, setCurrentAccount] = useState({
       address:"",
       email:"",
@@ -193,6 +198,14 @@ function App() {
     }, []);
  
  
+    const [paymentInfo, setPaymentInfo] = useState({
+      bankName:"",
+      transferAccount:"",
+      totalPayment:"",
+      EndPaymentTime:""
+    });
+
+
 
   return (
     <div className="App">
@@ -205,9 +218,9 @@ function App() {
       </div>
       <Promo/>
       <LoadingBar toggleLoading = {isLoading} loadingText={loadingMsg}/>
-      <Checkout user = {currentAccount} cart = {itemCart}/>
+      
         {
-          //SelectPage(selectedPage)
+          SelectPage(selectedPage)
           
         }
       <AppFooter/>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import WindowScaler from '../../component/WindowScaler';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faL, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -20,11 +20,6 @@ function ShopCart ({cart, onSetPage, onSetLoading}){
 
     const totalPayment = totalPrice + serviceCharge + tax;
    
-    function payItems (){
-        alert("Payment Success \nPaid: Rp" + totalPayment.toLocaleString());
-        onSetPage("home");
-    }
-
     const screenWidth = WindowScaler();
     const isMobile = screenWidth < 1000;
 
@@ -94,7 +89,7 @@ function ShopCart ({cart, onSetPage, onSetLoading}){
                         <h5 style={{color:"green"}}> Rp {totalPayment.toLocaleString()}</h5> 
                     </div>
                     <div className="col-4 ">
-                        <button type="button" className="btn btn-primary btn-md" onClick={payItems}> Process Payment </button>
+                        <button type="button" className="btn btn-primary btn-md" onClick={()=> onSetPage("checkout")}> Checkout Items </button>
                     </div>
                  </div>
             </>
@@ -118,22 +113,29 @@ function ShopCart ({cart, onSetPage, onSetLoading}){
                         <h6 style={{color:"green"}}> Rp {totalPayment.toLocaleString()}</h6> 
                     </div>
 
-                    <button type="button" className="btn btn-primary btn-md" onClick={payItems}> Process Payment </button>
+                    <button type="button" className="btn btn-primary btn-md" onClick={onSetPage("checkout")}> Checkout Items </button>
                     
                  </div>
             </>
         );
     }
 
-    const [canUpload, setCanUpload] = useState(true);
+    const canUpload = useRef(true);
 
-    function pushUpload(){
-        onSetLoading(true); 
-        UploadCart(cart);
+    useEffect(()=>{
+
+        if(canUpload.current === false){
+            console.log("second trigger, will not upload cart for the second time");
+            return;
+        }
+
+        canUpload.current = false;
+        onSetLoading(true);
         
+        UploadCart(cart);
         onSetLoading(false);
-        setCanUpload(false);
-    }
+        
+    },[]);
    
   return (
     <>
@@ -146,8 +148,6 @@ function ShopCart ({cart, onSetPage, onSetLoading}){
                 
                 {isMobile? mobileCount() : wideCount()}
                 
-                {canUpload ? pushUpload() : null}
-
             </div>
            
     </>
