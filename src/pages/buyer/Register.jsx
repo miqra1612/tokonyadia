@@ -5,7 +5,7 @@ import { auth, db } from '../../firebase/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { setDoc, doc } from 'firebase/firestore';
 
-function  Register ({account, onRegisterAccount, onSetPage}){
+function  Register ({account, onRegisterAccount, onSetPage, onSetLoading}){
     const inputStyle = {
             width: "180px",
             background: "#686de0",
@@ -115,6 +115,7 @@ function  Register ({account, onRegisterAccount, onSetPage}){
     const createRealAccount = async (e) => {
         
         e.preventDefault();
+        onSetLoading(true);
 
         accountInfo.buyersName = accountInfo.firstName + " " + accountInfo.lastName;
         accountInfo.completeAddress = accountInfo.address + ", " + accountInfo.city + ", " + accountInfo.province + ", " + accountInfo.country + ", " + accountInfo.postalCode;
@@ -133,6 +134,8 @@ function  Register ({account, onRegisterAccount, onSetPage}){
                     uid: userCred.user.uid
 
                 });
+
+                onSetLoading(false);
                 alert("Success Register \n" + "Name: " + accountInfo.buyersName + "\n" + "Username: " + accountInfo.username + "\n" + "Address: " + accountInfo.completeAddress);
                 onSetPage("login");
 

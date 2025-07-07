@@ -14,6 +14,8 @@ import { auth, db } from './firebase/firebaseConfig';
 import UploadCart from './firebase/UploadCart';
 import { doc,getDoc } from 'firebase/firestore';
 import { items } from './pages/seller/ItemsData';
+import LoadingBar from './component/LoadingBar';
+import Checkout from './pages/buyer/Checkout';
 
 
 function App() {
@@ -79,7 +81,7 @@ function App() {
         };
         window.addEventListener("beforeunload", handleUnload);
         return () => window.removeEventListener("beforeunload", handleUnload);
-  }, [itemCart]);
+  }, []);
 
   //End Region
 
@@ -104,11 +106,11 @@ function App() {
     
     switch(selectedPage){
       case "cart":
-        return <ShopCart cart = {itemCart} onSetPage={setPage}/>;
+        return <ShopCart cart = {itemCart} onSetPage={setPage} onSetLoading = {setIsloading}/>;
       case "register":
-        return <Register account = {account} onRegisterAccount ={registerAccount} onSetPage={setPage}/>;
+        return <Register account = {account} onRegisterAccount ={registerAccount} onSetPage={setPage} onSetLoading = {setIsloading}/>;
       case "login":
-        return <Login account = {account} onSetPage={setPage}/>;
+        return <Login account = {account} onSetPage={setPage} onSetLoading = {setIsloading} onLoadingMsg = {setLoadingMsg}/>;
       case "home":
         return <AppBody itemValue = {itemValue} onUpdatePrice = {updateMinMaxPrice} itemCart = {itemCart} onUpdateShopCart = {updateShopCart} searchValue = {searcItem}/>;
           
@@ -119,18 +121,50 @@ function App() {
   }
 
   //End Region
-
- 
+    const [isLoading, setIsloading] = useState(false);
+    const [loadingMsg, setLoadingMsg] = useState("Please Wait...");
+    const [startFetching, setStartFetching] = useState(true);
     const [user, setUser] = useState(null);
-
+    const [currentAccount, setCurrentAccount] = useState({
+      address:"",
+      email:"",
+      name:"",
+      phoneNumber:"",
+      role:"",
+      uid:""
+    });
+    
     useEffect(() => {
+     
+
+      if(startFetching){
+        setStartFetching(false);
+      }
+      else{
+        return;
+      }
+
+      setIsloading(true);
+
       const unsubscribeUser = onAuthStateChanged(auth, async (currentUser) => {
+  
         if(currentUser){
           //alert("Wellcome Back " + currentUser.email);
+          console.log("call auth");
           setUser(currentUser);
 
-          const cartdData = doc(db, "carts", currentUser.uid);
-          const cartSnapshot = await getDoc(cartdData);
+          const userRef = doc(db, "users", currentUser.uid);
+          const cartData = doc(db, "carts", currentUser.uid);
+
+          const [userSnapshot, cartSnapshot] = await Promise.all([
+            getDoc(userRef),
+            getDoc(cartData)
+          ]);
+
+          if(userSnapshot.exists()){
+            const myData = userSnapshot.data();
+            setCurrentAccount(myData);
+          }
 
           if(cartSnapshot.exists()){
             const snapData = cartSnapshot.data();
@@ -153,6 +187,8 @@ function App() {
         }
       });
 
+      setIsloading(false);
+
       return () => unsubscribeUser();
     }, []);
  
@@ -160,15 +196,18 @@ function App() {
 
   return (
     <div className="App">
+      
       <div className="fixed-top">
+       
         <AppNavbar onSetValue = {updateItemType} setPage={setPage} user = {user}/>
         <AppHead setPage = {setPage} onSetSearch={updateSeach} user = {user}/>
-
+        
       </div>
       <Promo/>
-      
+      <LoadingBar toggleLoading = {isLoading} loadingText={loadingMsg}/>
+      <Checkout user = {currentAccount} cart = {itemCart}/>
         {
-          SelectPage(selectedPage)
+          //SelectPage(selectedPage)
           
         }
       <AppFooter/>

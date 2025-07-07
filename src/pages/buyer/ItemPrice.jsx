@@ -3,17 +3,22 @@ import React, { useState } from 'react'
 function ItemPrice ({onUpdatePrice}){
   
   const [value, setValue] = useState({
-    minPrice:Number, 
-    maxPrice:Number
+    minPrice:0, 
+    maxPrice:10000000
   });
 
   const updateMin = (minValue) =>{
-    setValue(prev => ({...prev, minPrice:minValue}));
+    const cleanMin = parseInt(minValue.replace(/[^0-9-]/g, ''), 10);
+    setValue(prev => ({...prev, minPrice:cleanMin}));
   }
 
   const updateMax = (maxValue) =>{
-    setValue(prev => ({...prev, maxPrice:maxValue}))
+    const cleanMax =  parseInt(maxValue.replace(/[^0-9-]/g, ''), 10);
+    setValue(prev => ({...prev, maxPrice:cleanMax}))
   }
+
+  const maxValue = value.maxPrice.toLocaleString();
+  const minValue = value.minPrice.toLocaleString();
 
   
 
@@ -22,8 +27,8 @@ function ItemPrice ({onUpdatePrice}){
         <h6><b>Price Range</b></h6>
 
         <form>
-            <input type="number" className="form-control my-2" placeholder="Min Price..." aria-label="Min_Price" value= {value.minPrice} onChange={(e) => {updateMin(e.target.value)}}/>
-            <input type="number" className="form-control my-2" placeholder="Max Price..." aria-label="Max_Price" value = {value.maxPrice} onChange={(e) => {updateMax(e.target.value)}}/>
+            <input type="text" className="form-control my-2" placeholder="Min Price..." aria-label="Min_Price" value= {minValue} onChange={(e) => {updateMin(e.target.value)}}/>
+            <input type="text" className="form-control my-2" placeholder="Max Price..." aria-label="Max_Price" value = {maxValue} onChange={(e) => {updateMax(e.target.value)}}/>
             
             <button className="btn btn-outline-secondary my-2" type="button" id="searchBtn" onClick={(min,max)=> onUpdatePrice(value.minPrice,value.maxPrice)}>Search</button>
             

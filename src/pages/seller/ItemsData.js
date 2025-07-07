@@ -1,7 +1,7 @@
 export const items = [
     {
         name:"beras ayam jago 5kg",
-        price:"40,000",
+        price:"40.000",
         id:"br1",
         tipe:"makanan",
         image:"https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//catalog-image/105/MTA-128429556/no_brand_beras_ayam_pelung_25kg_full01_dl5rxy05.jpg"
@@ -662,7 +662,7 @@ export const items = [
         price:"8.400",
         id:"br95",
         tipe:"minuman",
-        image:"https://www.buavita.co.id/uploads/guavaoverlay.png"
+        image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR71Hv8Kl1ACuVaJ3XaISNnyMqfrLPuldsvZQ&s"
     },
     {
         name:"Yakult 65ml",

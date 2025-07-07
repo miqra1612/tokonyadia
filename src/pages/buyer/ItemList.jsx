@@ -59,7 +59,7 @@ function ItemList ({itemValue, itemCart, onUpdateShopCart, searchValue}) {
             <br/>
                 <div className="row row-cols-auto">
                     {itemlist.map((p)=>( 
-                        <div className="col" key={"col" + p.productId}>
+                        <div className="col" key={"col" + p.id}>
                             <div className="card" style={{width: "8rem", height:"20rem",  borderRadius:"12px"}}>
                                 <img src={p.image} className="card-img-top mx-auto my-2" alt="..." style={{width: "7rem", height: "8rem",  borderRadius:"8px"}}/>
                                 <div className="card-body">

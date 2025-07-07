@@ -5,7 +5,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
 import { auth, db } from '../../firebase/firebaseConfig';
 
-function Login ({account, onSetPage}){
+function Login ({account, onSetPage, onSetLoading, onLoadingMsg}){
     const promoStyle = { background: "#dff9fb" };
 
     const inputStyle = {
@@ -46,6 +46,8 @@ function Login ({account, onSetPage}){
         
     // }
 
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
     const [showPassword,setShowPassword] = useState(false);
     const togglePassword = ()=>{
         setShowPassword(!showPassword)
@@ -53,16 +55,23 @@ function Login ({account, onSetPage}){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        onSetLoading(true);
         try {
             const signInCred = await signInWithEmailAndPassword(auth, loginInfo.email, loginInfo.password);
             const userDoc = await getDoc(doc(db, "users", signInCred.user.uid));
 
             if(userDoc.exists()){
                 const userdata = userDoc.data();
-                alert("Wellcome " + userdata.role + " " + userdata.name);
+                
+                onLoadingMsg("Wellcome " + userdata.role + " " + userdata.name);
+                await delay(2000);
+                onSetLoading(false);
+                //alert("Wellcome " + userdata.role + " " + userdata.name);
                 onSetPage("home");
             }
         } catch (error) {
+            onSetLoading(false);
             alert(error.message);
         }
     }
