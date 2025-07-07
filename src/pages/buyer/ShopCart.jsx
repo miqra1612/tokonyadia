@@ -1,20 +1,22 @@
-import React, { useState } from 'react'
-import WindowScaler from './WindowScaler';
+import React, { useEffect, useState } from 'react'
+import WindowScaler from '../../component/WindowScaler';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faL, faTrash } from '@fortawesome/free-solid-svg-icons';
+import UploadCart from '../../firebase/UploadCart';
+import { items } from '../seller/ItemsData';
 
-function ShopCart ({cart, onSetPage}){
+function ShopCart ({cart, onSetPage, onSetLoading}){
     let imageStyle = {width: "6rem", height: "6rem",  borderRadius:"14px"}
     let boxItem = {background:"#c7ecee", borderRadius:"14px"}
     let btnStyle = {width:"40px", height:"30px"}
     let btnMobileStyle = {width:"30px", height:"30px"}
     let imageMobileStyle = {width: "6rem", height: "6rem",  borderRadius:"14px"}
     
-    const totalPrice = cart.reduce((sum, item) => sum + item.itemCount * item.itemPrice * 1000,0);
+    const totalPrice = cart.reduce((sum, item) => sum + item.quantity * item.price,0);
 
-    const serviceCharge = 4000;
+    const serviceCharge = 20000;
 
-    const tax = ((totalPrice + serviceCharge)*10)/100;
+    const tax = ( totalPrice * 10 )/ 100;
 
     const totalPayment = totalPrice + serviceCharge + tax;
    
@@ -26,17 +28,15 @@ function ShopCart ({cart, onSetPage}){
     const screenWidth = WindowScaler();
     const isMobile = screenWidth < 1000;
 
-    const mobileUI= (item)=>{
-        return(
-            <>
-             { 
-                   <div className="row row-cols-auto my-4" style={boxItem}>
+    const mobileUI= (item)=>(
+
+                   <div className="row row-cols-auto my-4" style={boxItem} key={"sh"+ item.productId}>
                         <div className="col-1 my-auto">
                             <img className="" src={item.image} alt="..."  style={imageMobileStyle}/>
                         </div>
                         <div className="col text-start mx-auto my-auto">
-                            <h6 className="mt-2" style={{width:"9rem"}}>{item.itemName} x {item.itemCount}</h6>
-                            <h6 >Rp { (1000 * item.itemPrice * item.itemCount).toLocaleString()}</h6>
+                            <h6 className="mt-2" style={{width:"9rem"}}>{item.productName} x {item.quantity}</h6>
+                            <h6 >Rp { ( item.price * item.quantity).toLocaleString()}</h6>
                             <br />
                            
                             <button type="button" className="btn btn-primary btn-sm mb-2" style={btnMobileStyle}> - </button>
@@ -48,29 +48,21 @@ function ShopCart ({cart, onSetPage}){
                        
                         <br/> 
                     </div>
-                
-              }
-            
-            </>
         );
-    }
 
-    const wideUI = (item)=>{
-        return(
-            <>
-            {
-               
-                   <div className="row my-4" style={boxItem}>
+    const wideUI = (item)=>(
+            
+                   <div className="row my-4" style={boxItem} key={"sh"+ item.productId}>
                         <div className="col-1 my-auto">
                             <img className="" src={item.image} alt="..."  style={imageStyle}/>
                         </div>
                         <div className="col justify-content-end mx-4 my-auto">
-                            <h6>{item.itemName} x {item.itemCount}</h6>
+                            <h6>{item.productName} x {item.quantity}</h6>
                             
                             
                         </div>
                         <div className="col my-auto justify-content-end">
-                            <h6 >Rp { (1000 * item.itemPrice * item.itemCount).toLocaleString()}</h6>
+                            <h6 >Rp { (1000 * item.price * item.quantity).toLocaleString()}</h6>
                         </div>
                         <div className="col my-auto">
                                 <button type="button" className="btn btn-primary btn-sm mx-2" style={btnStyle}> - </button>
@@ -81,12 +73,9 @@ function ShopCart ({cart, onSetPage}){
                         
                         <br/> 
                     </div> 
-               
-            }
             
-            </>
         );
-    }
+    
 
     const wideCount =()=>{
         return(
@@ -95,7 +84,7 @@ function ShopCart ({cart, onSetPage}){
                     <div className="col-2 text-start my-auto">
                         <h5> Total Price: </h5> 
                         <h5> Service Fee: </h5> 
-                        <h5> Tax 10%: </h5> 
+                        <h5> PPN 10%: </h5> 
                         <h5 style={{color:"green"}}> Total Payment: </h5> 
                     </div>
                     <div className="col-4 text-end my-auto">
@@ -119,7 +108,7 @@ function ShopCart ({cart, onSetPage}){
                     <div className="col text-start my-auto">
                         <h6> Total Price: </h6> 
                         <h6> Service Fee: </h6> 
-                        <h6> Tax 10%: </h6> 
+                        <h6> PPN 10%: </h6> 
                         <h6 style={{color:"green"}}> Total Payment: </h6> 
                     </div>
                     <div className="col text-end my-auto">
@@ -136,7 +125,15 @@ function ShopCart ({cart, onSetPage}){
         );
     }
 
+    const [canUpload, setCanUpload] = useState(true);
 
+    function pushUpload(){
+        onSetLoading(true); 
+        UploadCart(cart);
+        
+        onSetLoading(false);
+        setCanUpload(false);
+    }
    
   return (
     <>
@@ -145,12 +142,12 @@ function ShopCart ({cart, onSetPage}){
                 {cart.map((item)=>(
                    
                     isMobile? mobileUI(item) : wideUI(item)
-                    
-                
                 ))}
                 
                 {isMobile? mobileCount() : wideCount()}
-                 
+                
+                {canUpload ? pushUpload() : null}
+
             </div>
            
     </>

@@ -1,7 +1,8 @@
+import { signOut } from 'firebase/auth';
 import React, { useState } from 'react';
+import { auth } from '../firebase/firebaseConfig';
 
-
-export default function AppNavbar({onSetValue, setPage}){
+export default function AppNavbar({onSetValue, setPage, user}){
     let btnStyle = {  };
 
     const [showMenu,setShowMenu] = useState(true);
@@ -9,6 +10,31 @@ export default function AppNavbar({onSetValue, setPage}){
         setShowMenu(!showMenu);
     }
 
+    const isLogin = () => {
+        
+        if(user !== null){
+            return (
+                <>
+                <form className="d-flex position-absolute end-0">
+                <button className="btn btn-outline-dark me-2" type="button" onClick={async ()=> {await signOut(auth); setPage("home")}}>Log out</button>
+                </form>
+                </>
+            );
+        }
+        // else {
+            return ( 
+                <>
+                <form className="d-flex position-absolute end-0">
+                <button className="btn btn-outline-dark me-2" type="button" onClick={()=> setPage("login")}>Log in</button>
+                <button className="btn btn-outline-primary me-2" type="button" onClick={()=> setPage("register")}>Register</button>
+                </form>
+                </>
+            );
+        //}
+
+        //return null;
+        
+    }
 
     return(
         
@@ -19,14 +45,7 @@ export default function AppNavbar({onSetValue, setPage}){
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" onClick={toggleMenu}>
                     <span className="navbar-toggler-icon"></span>
                     </button>
-                    {
-                        showMenu ? 
-                            <form className="d-flex position-absolute end-0">
-                            <button className="btn btn-outline-dark me-2" type="button" onClick={()=> setPage("login")}>Log in</button>
-                            <button className="btn btn-outline-primary me-2" type="button" onClick={()=> setPage("register")}>Register</button>
-                            </form> : null
-
-                    }
+                    { showMenu ? isLogin() : null }
                     
 
                     <div className="collapse navbar-collapse" id="navbarNav">

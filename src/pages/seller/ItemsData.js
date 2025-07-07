@@ -1,94 +1,7 @@
-import { type } from '@testing-library/user-event/dist/type'
-import React, { useState } from 'react'
-
-function ItemList ({itemValue, itemCart, onUpdateShopCart, searchValue}) {
-    let itemlist = items;
-    let buttonStyle = { background: "#f0932b", color:"white" };
-
-    //Region SortPrice
-    const sortList = ()=>{
-       if(itemValue.tipe === "default" || itemValue.tipe ===" "){
-        itemlist = items;
-       }
-       else{
-        itemlist = items.filter(t => t.tipe === itemValue.tipe);
-       }
-
-       if(searchValue !== ""){
-        itemlist = itemlist.filter(p => p.name.toLowerCase().includes(searchValue.toLowerCase()));
-       }
-    
-       if(itemValue.minPrice > 0 ){
-        
-        itemlist = itemlist.filter(p => parseInt(p.price.replace(".","")) >= itemValue.minPrice);
-       }
-
-       if(itemValue.maxPrice > 0 ){
-        
-        itemlist = itemlist.filter(p => parseInt(p.price.replace(".","")) <= itemValue.maxPrice);
-       }
-
-       
-    }
-    //End Region
-
-    //Region AddItem
-   
-    const AddItem= (item)=>{
-        const shopItem = {
-            itemName: item.name,
-            itemCount:1,
-            itemPrice:parseFloat(item.price),
-            itemId:item.id,
-            promoType:"",
-            itemType:item.tipe,
-            image:item.image,
-        };
-
-        onUpdateShopCart(shopItem);
-       
-        //alert( itemCart.map((i)=>(i.itemName)+ "\n") );
-          alert("add 1 item: " + shopItem.itemName)  
-    }
-
-    return (
-    <div>
-        <div className="container-fluid "> {sortList()}
-            <br/>
-                <div className="row row-cols-auto">
-                    {itemlist.map((p)=>( 
-                        <div className="col" key={"col" + p.id}>
-                            <div className="card" style={{width: "8rem", height:"20rem",  borderRadius:"12px"}}>
-                                <img src={p.image} className="card-img-top mx-auto my-2" alt="..." style={{width: "7rem", height: "8rem",  borderRadius:"8px"}}/>
-                                <div className="card-body">
-                                    <p className="card-text">{p.name}</p>
-                                    
-                                    <div className="position-absolute bottom-0 start-50 translate-middle-x my-3"> 
-                                        <h6 className="card-title" style={{width: "8rem", height:"20px"}}>Rp {p.price}</h6>
-                                        <a href="#" className="btn" style={buttonStyle} key={"but"+p.id} onClick={() => { AddItem(p); }}>Order</a>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <br/>
-                        </div>
-                    ))}
-                    
-                
-                </div>
-        </div>
-           
-    </div>
-  );
-}
-
-export default ItemList
-
-
-const items = [
+export const items = [
     {
         name:"beras ayam jago 5kg",
-        price:"40,000",
+        price:"40.000",
         id:"br1",
         tipe:"makanan",
         image:"https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//catalog-image/105/MTA-128429556/no_brand_beras_ayam_pelung_25kg_full01_dl5rxy05.jpg"
@@ -749,7 +662,7 @@ const items = [
         price:"8.400",
         id:"br95",
         tipe:"minuman",
-        image:"https://www.buavita.co.id/uploads/guavaoverlay.png"
+        image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR71Hv8Kl1ACuVaJ3XaISNnyMqfrLPuldsvZQ&s"
     },
     {
         name:"Yakult 65ml",
@@ -871,4 +784,3 @@ const items = [
         image:"https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//736/broco_broco-t-stop-kontak---putih_full02.jpg"
     }
 ]
-
