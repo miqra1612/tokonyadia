@@ -17,6 +17,7 @@ import { items } from './pages/seller/ItemsData';
 import LoadingBar from './component/LoadingBar';
 import Checkout from './pages/buyer/Checkout';
 import PaymentInfo from './pages/buyer/PaymentInfo';
+import SellerDashboard from './pages/seller/SellerDashboard';
 
 
 function App() {
@@ -212,15 +213,21 @@ function App() {
       
       <div className="fixed-top">
        
-        <AppNavbar onSetValue = {updateItemType} setPage={setPage} user = {user}/>
-        <AppHead setPage = {setPage} onSetSearch={updateSeach} user = {user}/>
+        {//<AppNavbar onSetValue = {updateItemType} setPage={setPage} user = {user}/>
+        //<AppHead setPage = {setPage} onSetSearch={updateSeach} user = {user}/>
+        }
+        
+        
         
       </div>
-      <Promo/>
-      <LoadingBar toggleLoading = {isLoading} loadingText={loadingMsg}/>
+      {//<Promo/>
+      }
       
+      <LoadingBar toggleLoading = {isLoading} loadingText={loadingMsg}/>
+      <SellerDashboard onSetValue = {updateItemType} setPage={setPage} user = {user} currentAccount = {currentAccount}/>
+
         {
-          SelectPage(selectedPage)
+          //SelectPage(selectedPage)
           
         }
       <AppFooter/>
