@@ -20,6 +20,7 @@ export default Location
 
 const shopLocation = [
     "Jakarta",
+    "Bekasi",
     "Bandung",
     "Jogjakarta",
     "Surabaya",
