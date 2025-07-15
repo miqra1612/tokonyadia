@@ -1,7 +1,8 @@
 import React from "react";
 
 export default function SellerProfile({currentAccount}){
-    const imageStyle = {height: "256px", width:"256px", borderRadius:"16px"}
+    const imageStyle = {height: "256px", width:"256px", borderRadius:"16px"};
+    
     return(
         <div className ="container-fluid my-4">
                 <h5 className="text-center">Seller Profile</h5><br />
